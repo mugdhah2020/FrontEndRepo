@@ -1,0 +1,167 @@
+<h3 class="text-warning">Add Task</h3>
+<hr>
+<div class="row">
+    <div class="col-xl-12">
+  <ul class="nav nav-pills ">
+    <li class="nav-item">
+      <h4><a routerLink="/task" routerLinkActive="active" >Add Task</a></h4>
+    </li>
+    <li class="nav-item" style="padding-left:21px">
+      <h4><a routerLink="/viewTask" class="text-secondary"  >View Task</a></h4>
+    </li>
+    <li class="nav-item" style="padding-left:21px">
+      <h4><a routerLink="/user" class="text-secondary"  >Add User</a></h4>
+    </li>
+    <li class="nav-item" style="padding-left:21px">
+        <h4><a routerLink="/project" class="text-secondary"  >Add Project</a></h4>
+      </li>
+    
+    </ul>
+  </div>
+  </div>
+<div class="container-fluid">
+    <div class="form-group">
+      <span *ngIf=successMessage class="alert alert-success text-center" role="alert">{{successMessage}}</span>
+      <span *ngIf=failureMessage class="alert alert-danger text-center" role="alert">{{failureMessage}}</span>
+    </div>
+    <form>
+      <div class="form-group">
+        <div class="row">
+          <label for="projectname" class="col-md-2">Project:</label>
+          <input type="text" class="col-md-4 form-control" disabled id="projectname" name="projectname" [(ngModel)]="task.project.projectName"
+            style="background-color:#d3d3d3">&nbsp;
+            <button type="button" class="col-md-1" (click)="openProjectModel()" value="search">Search</button>
+        </div>
+        <div *ngIf="projectNameError" class="row">
+          <div class="col-md-2"></div>
+          <span *ngIf="projectNameError" class="alert-danger text-center" role="alert">{{projectNameError}}</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <label for="task" class="col-md-2">Task:</label>
+          <input type="text" class="col-md-5 form-control" id="task" name="task" [(ngModel)]="task.taskName" style="background-color:#d3d3d3">
+        </div>
+        <div *ngIf="taskNameError" class="row">
+          <div class="col-md-2"></div>
+          <span *ngIf="taskNameError" class="alert-danger text-center" role="alert">{{taskNameError}}</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-2"></div>
+          <div class="col-md-5">
+            <input type="checkbox" (click)="togglePTask()" name="enableParent" [(ngModel)]="enableParent" style="background-color:#d3d3d3">
+            <label for="endabledate" class="col-md-7">Parent Task</label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!enableParent">
+        <div class="form-group">
+          
+          <div class="row">
+            <label for="priority" class="col-md-2">Priority:</label>
+            <div class="col-md-9" id="priority_range">
+              <output name="startrange" id="startrange">0</output>
+              <input id="priority" class="col-md-11" name="priority" type="range" value="0" [(ngModel)]="task.priority" min="0" max="30"
+                oninput>
+                <output name="endrange" id="endrange">30</output>
+                <br> Priority: {{task.priority}}
+            </div>
+          </div>
+          
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <label for="ptask" class="col-md-2">Parent Task:</label>
+            <input type="text" disabled class="col-md-4  form-control" id="ptask" name="ptask" [(ngModel)]="task.parent.parentTask" style="background-color:#d3d3d3">&nbsp;
+            <button type="button" class="col-md-1" (click)="openParentModel()" value="search">Search</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <label for="sdate" class="col-md-2">Start Date:</label>
+            <input type="date" class="col-md-2 form-control text-center" id="sdate" name="sdate" [(ngModel)]="task.startDate" style="background-color:#d3d3d3">&nbsp;&nbsp;&nbsp;&nbsp;
+            <label for="edate" class="">End Date:</label>&nbsp;&nbsp;
+            <input type="date" class="col-md-2  form-control text-center" id="edate" name="edate" [(ngModel)]="task.endDate" style="background-color:#d3d3d3">
+          </div>
+        </div>
+        <div class="form-group">
+          <div *ngIf="dateError" class="row">
+            <div class="col-md-2"></div>
+            <span *ngIf="dateError" class="alert-danger text-center" role="alert">{{dateError}}</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <label for="puser" class="col-md-2">User:</label>
+            <input type="text" class="col-md-4 form-control" id="puser" name="puser" disabled [(ngModel)]="task.user.firstName" style="background-color:#d3d3d3">&nbsp;
+            <button type="button" class="col-md-1" (click)="openUserModel()" value="search">Search</button>
+          </div>
+          <div *ngIf="userError" class="row">
+            <div class="col-md-2"></div>
+            <span *ngIf="userError" class="alert-danger text-center" role="alert">{{userError}}</span>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-5"></div>
+          <button type="submit" value="Add Task" class="col-sm-1 btn btn-primary" (click)="save($event)">Add</button>&nbsp;&nbsp;&nbsp;&nbsp;
+          <button type="reset" value="Reset" class="col-sm-1">Reset</button>
+        </div>
+      </div>
+    </form>
+    <div class="modal" role="dialog" id="userSearch" [ngStyle]="{'display':display}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{{modalTitle}}</h4>
+            <button type="button" class="close" (click)="closeModal()" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <p>{{modalMessage}}</p>
+              <div class="form-group">
+                <input type="text" placeholder="Search..." class="col-md-9 form-control" id="" name="searchItem" [(ngModel)]="searchItem"
+                  style="background-color:#d3d3d3">
+              </div>
+              <div *ngIf="modalType==='userModal'" class="list-group">
+                <li class="list-group-item" *ngFor="let user of users | userSearch:searchItem">
+                  <a href="#" (click)="selectedUser(user, $event)">{{user.firstName}} {{user.lastName}}</a>
+                </li>
+              </div>
+              <div *ngIf="modalType==='parentModal'" class="list-group">
+              <!--mugdha  <li class="list-group-item" *ngFor="let parent of allParent | filterparent:searchItem">
+                   <a href="#" (click)="selectedParent(parent, $event)">{{parent.parentTask}}</a> 
+                </li>-->
+              </div>
+              <div *ngIf="modalType==='projectModal'" class="list-group">
+                 
+                <li class="list-group-item" *ngFor="let project of projects | filterProject:searchItem">
+                    <a href="#" (click)="selectedProject(project, $event)">{{project.projectName}}</a>
+                </li>
+              </div>
+            </form>
+          </div>
+          <div *ngIf="user.firstName && modalType==='userModal'">
+            <p class="text-center">
+              <strong>Selected User for Manager:</strong> {{user.firstName}} {{user.lastName}}</p>
+          </div>
+          <div *ngIf="parent.parentTask && modalType==='parentModal'">
+            <p class="text-center">
+              <strong>Selected Parent Task:</strong> {{parent.parentTask}}</p>
+          </div>
+          <div *ngIf="project.projectName && modalType==='projectModal'">
+            <p class="text-center">
+              <strong>Selected Project:</strong> {{project.projectName}}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="add()" data-dismiss="modal">Add</button>
+            <button type="button" class="btn btn-danger" (click)="closeModal()" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

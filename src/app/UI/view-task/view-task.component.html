@@ -1,0 +1,143 @@
+<h3 class="text-warning">Add Task</h3>
+<hr>
+<div class="row">
+    <div class="col-xl-12">
+  <ul class="nav nav-pills ">
+    <li class="nav-item">
+      <h4><a routerLink="/viewTask" routerLinkActive="active" >View Task</a></h4>
+    </li>
+    <li class="nav-item" style="padding-left:21px">
+      <h4><a routerLink="/user" class="text-secondary"  >Add User</a></h4>
+    </li>
+    <li class="nav-item" style="padding-left:21px">
+        <h4><a routerLink="/task" class="text-secondary"  >Add Task</a></h4>
+      </li>
+    <li class="nav-item" style="padding-left:21px">
+        <h4><a routerLink="/project" class="text-secondary"  >Add Project</a></h4>
+      </li>
+    
+    </ul>
+  </div>
+  </div>
+<div class="container-fluid">
+    <div class="form-group">
+      <div class="row">
+        <label for="pname" class="col-md-1">Project:</label><br>
+        <input type="text" class="col-md-4 form-control" placeholder="Search..." disabled id="pname" [(ngModel)]="searchItem" name="pname" style="background-color:#d3d3d3">&nbsp;&nbsp;
+        <button type="button" class="col-md-1 btn btn-info" (click)="openProjectModel()" value="search">Search</button>&nbsp;&nbsp;
+        <div>Sort Task By</div>&nbsp;&nbsp;
+        <button type="button" class="btn btn-info btn-sm" (click)="sortByStartDate()" value="Start Date">Start Date</button>&nbsp;&nbsp;
+        <button type="button" class="btn btn-info" (click)="sortByEndDate()" value="End Date">End Date</button>&nbsp;&nbsp;
+        <button type="button" class="btn btn-info" (click)="sortByPriority()" value="Priority">Priority</button>&nbsp;&nbsp;
+        <button type="button" class="btn btn-info" (click)="sortByStatus()" value="Completed">Completed</button>
+      </div>
+    </div>
+    <br>
+    <hr style="border-top: solid 1px;">
+    <div class="row text-center" *ngFor="let task of tasks | filter:searchItem">
+      <div class="col-md-3">
+        <div class="row column-text-align">
+          <strong>Task</strong>
+        </div>
+        <div class="row column-text-align column-bg-color">
+          <br>
+          <p class="text-center">{{task.taskName}}</p>
+          <br>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="row column-text-align">
+          <strong>Parent</strong>
+        </div>
+        <div class="row column-text-align column-bg-color">
+          <br>
+          <p class="text-center">
+            {{(task.parent && task.parent.parentTask)?task.parent.parentTask:'No Parent task'}}
+          </p>
+          <br>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <div class="row column-text-align">
+          <strong>Priority</strong>
+        </div>
+        <div class="row column-text-align">
+          <br>
+          <p class="text-center">{{task.priority}}</p>
+          <br>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <div class="row column-text-align">
+          <strong>Start</strong>
+        </div>
+        <div class="row column-text-align">
+          <br>
+          <p class="text-center">{{task.startDate | date: 'dd/MM/yyyy'}}</p>
+          <br>
+        </div>
+      </div>
+      <div class="col-md-1">
+        <div class="row column-text-align">
+          <strong>End</strong>
+        </div>
+        <div class="row column-text-align">
+          <br>
+          <p class="text-center">{{task.endDate | date: 'dd/MM/yyyy'}}</p>
+          <br>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="row column-text-align">
+          <br>
+        </div>
+        <div class="row column-text-align">
+          <br>
+          <button class="btn btn-primary btn-sm col-md-12" routerLink="/update/{{task.taskId}}">{{(task.endDate
+                              <=todayDate && task.endDate !='')? 'View': 'Edit'}}</button>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <div class="row column-text-align">
+          <br>
+        </div>
+        <div class="row column-text-align">   
+          <br>     
+          <button *ngIf="!(task.endDate
+                          <=todayDate && task.endDate !='')" class="btn btn-danger btn-sm " (click)="endTask(task)">End Task</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal" id="projectSearch" [ngStyle]="{'display':display}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Project Search</h4>
+            <button type="button" class="close" (click)="closeModal()" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <p>Please select anyone of the project below</p>
+              <div class="form-group">
+                <input type="text" placeholder="Search..." class="col-md-9 form-control" id="searchItem" name="searchItem" [(ngModel)]="searchItem"
+                  style="background-color:#d3d3d3">
+              </div>
+              <div class="list-group">
+                <li class="list-group-item" *ngFor="let project of projects | filterProject:searchItem">
+                  <a href="#" (click)="selectedProject(project, $event)">{{project.projectName}}</a>
+                </li>
+              </div>
+            </form>
+          </div>
+          <div *ngIf="project.projectName">
+            <p class="text-center">
+              <strong>Selected Project Name:</strong> {{project.projectName}}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="add()" data-dismiss="modal">Add</button>
+            <button type="button" class="btn btn-danger" (click)="closeModal()" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,116 @@
+<h3 class="text-warning">Add User</h3>
+<hr>
+<div class="row">
+    <div class="col-xl-12">
+  <ul class="nav nav-pills ">
+    <li class="nav-item">
+      <h4><a routerLink="/user" routerLinkActive="active" >Add User</a></h4>
+    </li>
+    <li class="nav-item" style="padding-left:21px">
+      <h4><a routerLink="/project" class="text-secondary"  >Add Project</a></h4>
+    </li>
+    <li class="nav-item" style="padding-left:21px">
+        <h4><a routerLink="/task" class="text-secondary"  >Add Task</a></h4>
+      </li>
+      <li class="nav-item" style="padding-left:21px">
+        <h4><a routerLink="/viewTask" class="text-secondary"  >View Task</a></h4>
+      </li>
+    
+    </ul>
+  </div>
+  </div>
+<div class="container-fluid">
+    <div class="form-group">
+      <span *ngIf=successMessage class="alert alert-success text-center" role="alert">{{successMessage}}</span>
+      <span *ngIf="failureMessage" class="alert alert-danger text-center" role="alert">{{failureMessage}}</span>
+    </div>
+    <form>
+      <div class="form-group">
+        <div class="row">
+          <label for="fname" class="col-md-2">First Name:</label>
+          <input type="text" class="col-md-5 form-control" id="fname" name="fname" required [(ngModel)]="user.firstName" style="background-color:#d3d3d3">&nbsp;
+        </div>
+        <div *ngIf="fnameError" class="row">
+          <div class="col-md-2"></div>
+          <span *ngIf="fnameError" class="col-md-4 alert-danger text-center" role="alert">{{fnameError}}</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <label for="lname" class="col-md-2">Last Name:</label>
+          <input type="text" class="col-md-5 form-control" id="lname" name="lname" required [(ngModel)]="user.lastName" style="background-color:#d3d3d3">&nbsp;
+        </div>
+        <div *ngIf="lnameError" class="row">
+          <div class="col-md-2"></div>
+          <span *ngIf="lnameError" class="col-md-4 alert-danger text-center" role="alert">{{lnameError}}</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <label for="empId" class="col-md-2">Employee ID:</label>
+          <input type="text" class="col-md-3 form-control" id="empId" name="empId" required [(ngModel)]="user.employeeId" style="background-color:#d3d3d3">&nbsp;
+        </div>
+        <div *ngIf="empIdError" class="row">
+          <div class="col-md-2"></div>
+          <span *ngIf="empIdError" class="col-md-4 alert-danger text-center" role="alert">{{empIdError}}</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-5"></div>
+          <button type="submit" value="Add" class="col-md-1 btn btn-primary" (click)="save($event)">{{saveType}}</button>&nbsp;
+          <button type="button" value="Reset" (click)="reset()" class="col-md-1">Reset</button>
+        </div>
+      </div>
+      <hr style="border-top: solid darkblue 1px;" />
+    </form>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-md-1"></div>
+        <input type="text" class="col-md-3 form-control" placeholder="Search..." id="empName" name="empName" [(ngModel)]="empName"
+          style="background-color:#d3d3d3">
+         
+        <div class="col-md-1">Sort:</div>
+        <button type="button" class="col-md-2" (click)="sortByFirstName()" value="First Name">First Name</button>&nbsp;&nbsp;
+        <button type="button" class="col-md-2" (click)="sortByLastName()" value="Last Name">Last Name</button>&nbsp;&nbsp;
+        <button type="button" class="col-md-2" (click)="sortByEmpId()" value="Emp Id">Emp Id</button>
+      </div>
+    </div>
+    <hr style="border-top: dotted darkblue 1px;" />
+  <div class="list-group">
+    <li *ngFor="let user of users |userSearch:empName" class="list-group-item border-0">
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-7 column-bg-color">
+          <div class="row">
+            <label for="showfname" class="col-md-3">First Name</label>
+            <input type="text" disabled class="col-md-8 form-control" id="showfname" name="showfname" required [(ngModel)]="user.firstName"
+              style="background-color:#d3d3d3">
+          </div>
+          <br>
+          <div class="row">
+            <label for="showlname" class="col-md-3">Last Name</label>
+            <input type="text" disabled class="col-md-8 form-control" id="showlname" name="showlname" required [(ngModel)]="user.lastName"
+              style="background-color:#d3d3d3">
+          </div>
+          <br>
+          <div class="row">
+            <label for="showempid" class="col-md-3">Employee ID</label>
+            <input type="text" disabled class="col-md-8 form-control" id="showempid" name="showempid" required [(ngModel)]="user.employeeId"
+              style="background-color:#d3d3d3">
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="row column-text-align">
+            <button type="button" class="col-md-12" (click)="edit(user)" value="Edit">Edit</button>
+          </div>
+          <br>
+          <div class="row column-text-align">
+            <button type="button" class="col-md-12" (click)="delete(user)" value="Delete">Delete</button>
+          </div>
+        </div>
+      </div>
+      <hr style="border-top: dotted darkblue 1px;" />
+    </li>
+  </div>
+</div>

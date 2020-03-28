@@ -1,0 +1,102 @@
+<h3 class="text-warning">Edit Task</h3>
+
+<div class="container-fluid">
+    <div class="form-group">
+        <span *ngIf=successMessage class="alert alert-success text-center" role="alert">{{successMessage}}</span>
+        <span *ngIf=failureMessage class="alert alert-danger text-center" role="alert">{{failureMessage}}</span>
+    </div>
+    <form>
+      <div class="form-group">
+        <div class="row">
+          <label for="projectname" class="col-md-2">Project:</label>
+          <input type="text" class="col-md-4 form-control" disabled id="projectname" name="projectname" [(ngModel)]="task.project.projectName"
+            style="background-color:#d3d3d3">&nbsp;
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <label for="task" class="col-md-2">Task:</label>
+          <input type="text" class="col-md-4 form-control" id="task" [disabled]=viewOnly name="task" [(ngModel)]="task.taskName" style="background-color:#d3d3d3">
+        </div>
+      </div>
+      <div *ngIf="enableParent">
+        <p>This is Parent Task</p>
+      </div>
+      <div *ngIf="!enableParent">
+        <div class="form-group">
+          <div class="row">
+            <label for="priority" class="col-md-2">Priority:</label>
+            <div class="col-md-10">
+              <output name="startrange" id="startrange">0</output>
+              <input id="priority" class="col-md-4" name="priority" [disabled]=viewOnly type="range" value="0" [(ngModel)]="task.priority"
+                min="0" max="30">
+                <output name="endrange" id="endrange">30</output>
+                <br> Priority: {{task.priority}}
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <label for="ptask" class="col-md-2">Parent Task:</label>
+            <input type="text" class="col-md-3 form-control" id="ptask" disabled name="ptask" [(ngModel)]="task.parent.parentTask" style="background-color:#d3d3d3">&nbsp;&nbsp;
+            <button *ngIf="!viewOnly" type="button" class="col-md-1" (click)="openParentModel()" value="search">Search</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="row">
+            <label for="sdate" class="col-md-2">Start Date:</label>
+            <input type="date" class="col-md-2 form-control" id="sdate" [disabled]=viewOnly name="sdate" [(ngModel)]="task.startDate"
+              style="background-color:#d3d3d3">&nbsp;&nbsp;&nbsp;&nbsp;
+             <label for="edate" class="">End Date:</label>&nbsp;&nbsp;
+             <input type="date" class="col-md-2 form-control" id="edate" [disabled]=viewOnly name="edate" [(ngModel)]="task.endDate" style="background-color:#d3d3d3">
+          </div>
+        </div>
+        <div class="form-group">
+          
+        </div>
+        <div *ngIf="dateError" class="row">
+          <div class="col-md-2"></div>
+          <span *ngIf="dateError" class="alert-danger text-center" role="alert">{{dateError}}</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-2"></div>
+          <button *ngIf="!viewOnly" type="submit" class="btn btn-primary" (click)="updateTask($event)">Update</button>&nbsp;&nbsp;&nbsp;&nbsp;
+          <button routerLink='/viewTask' class="">Cancel</button>
+        </div>
+      </div>
+    </form>
+    <div class="modal" id="userSearch" [ngStyle]="{'display':display}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Parent Task Selection</h4>
+            <button type="button" class="close" (click)="closeModal()" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <p>Please select anyone of the task below as Parent Task</p>
+              <div class="form-group">
+                <input type="text" placeholder="Search..." class="col-md-9 form-control" id="searchItem" name="searchItem" [(ngModel)]="searchItem"
+                  style="background-color:#d3d3d3">
+              </div>
+              <div class="list-group">
+              <!--  <li class="list-group-item" *ngFor="let parent of allParent | filterparent:searchItem">
+                  <a href="#" (click)="selectedParent(parent, $event)">{{parent.parentTask}}</a>
+                </li>-->
+              </div>
+            </form>
+          </div>
+          <div *ngIf="parent.parentTask">
+            <p class="text-center">
+              <strong>Selected Parent Task:</strong> {{parent.parentTask}}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="add()" data-dismiss="modal">Add</button>
+            <button type="button" class="btn btn-danger" (click)="closeModal()" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

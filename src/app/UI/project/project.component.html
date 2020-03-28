@@ -1,0 +1,179 @@
+<h3 class="text-warning">Add Project</h3>
+<hr>
+<div class="row">
+    <div class="col-xl-12">
+  <ul class="nav nav-pills ">
+    <li class="nav-item">
+      <h4><a routerLink="/project" routerLinkActive="active" >Add Project</a></h4>
+    </li>
+    <li class="nav-item" style="padding-left:21px">
+      <h4><a routerLink="/user" class="text-secondary"  >Add User</a></h4>
+    </li>
+    <li class="nav-item" style="padding-left:21px">
+        <h4><a routerLink="/task" class="text-secondary"  >Add Task</a></h4>
+      </li>
+      <li class="nav-item" style="padding-left:21px">
+        <h4><a routerLink="/viewTask" class="text-secondary"  >View Task</a></h4>
+      </li>
+    
+    </ul>
+  </div>
+  </div>
+<div class="container-fluid">
+    <div class="form-group">
+      <span *ngIf=successMessage class="alert alert-success text-center" role="alert">{{successMessage}}</span>
+      <span *ngIf="failureMessage" class="alert alert-danger text-center" role="alert">{{failureMessage}}</span>
+    </div>
+    <form>
+      <div class="form-group">
+        <div class="row">
+          <label for="name" class="col-md-2">Project:</label>
+          <input type="text" class="col-md-8 form-control" id="name" name="name" required [(ngModel)]="project.projectName" style="background-color:#d3d3d3">&nbsp;
+        </div>
+        <div *ngIf="nameError" class="row">
+          <div class="col-md-2"></div>
+          <span *ngIf="nameError" class="col-md-4 alert-danger text-center" role="alert">{{nameError}}</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-2"></div>
+          <div class="col-md-9" id="proj_two">
+            <input type="checkbox" (click)="toggleDate()" name="endabledate" [(ngModel)]="enableDate" style="background-color:#d3d3d3">
+            <label for="endabledate" id="enddate_project" class="col-md-3">Set Start and End Date</label>&nbsp;&nbsp;
+            <input [type]="dateType" [disabled]="!enableDate" class="col-md-3" placeholder="Start Date" id="sdate" name="sdate" [(ngModel)]="project.startDate"
+              style="background-color:#d3d3d3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <input [type]="dateType" [disabled]="!enableDate" class="col-md-3" placeholder="End Date" id="edate" name="edate" [(ngModel)]="project.endDate"
+                style="background-color:#d3d3d3">
+          </div>
+        </div>
+        <div *ngIf="dateError" class="row">
+          <div class="col-md-2"></div>
+          <span *ngIf="dateError" class="col-md-4 alert-danger text-center" role="alert">{{dateError}}</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <label for="priority" class="col-md-2">Priority:</label>
+          <div class="col-md-9" id="priority_range">
+            <output name="startrange" id="startrange">0</output>
+            <input id="priority" class="col-md-11" name="priority" type="range" value="0" [(ngModel)]="project.priority" min="0" max="30"
+              oninput>
+              <output name="endrange" id="endrange">30</output>
+              <br> Priority: {{project.priority}}
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <label for="puser" class="col-md-2">Manager:</label>
+          <input type="text" class="col-md-7 form-control" id="puser" name="puser" disabled [(ngModel)]="project.user.firstName" style="background-color:#d3d3d3">&nbsp;
+          <button type="button" class="col-md-1" (click)="openUserModel()" value="search">Search</button>
+        </div>
+        <div *ngIf="managerError" class="row">
+          <div class="col-md-2"></div>
+          <span *ngIf="managerError" class="alert-danger text-center" role="alert">{{managerError}}</span>
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-8"></div>
+          <button type="submit" value="Add" class="col-md-1 btn btn-primary" (click)="save($event)">{{saveType}}</button>&nbsp;
+          <button type="button" value="Reset" (click)="reset()" class="col-md-1">Reset</button>
+        </div>
+      </div>
+    
+    
+      </form>
+      <hr>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-2"></div>
+          <input type="text" class="col-md-8 form-control" placeholder="Search Project" id="pname" name="pname" [(ngModel)]="pname"
+            style="background-color:#d3d3d3">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-2"></div>
+          <div class="col-md-1">Sort By</div>&nbsp;&nbsp;
+          <button type="button" (click)="sortByStartDate()" value="Start Date">Start Date</button>&nbsp;&nbsp;
+          <button type="button" (click)="sortByEndDate()" value="End Date">End Date</button>&nbsp;&nbsp;
+          <button type="button" (click)="sortByPriority()" value="Priority">Priority</button>&nbsp;&nbsp;
+          <button type="button" (click)="sortByStatus()" value="Completed">Completed</button>&nbsp;&nbsp;
+        </div>
+      </div>
+      <div class="list-group">
+        <li *ngFor="let project of projects | filterProject:pname" class="list-group-item">
+          <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-6 ml-1 column-bg-color">
+              <div class="row">
+                <label class="col-md-10"><strong>Project:</strong> {{project.projectName}}</label>
+              </div>
+              <div class="row">
+                <br>
+              </div>
+              <div class="row">
+                <label class="col-md-6"><strong>No of Tasks:</strong> {{project.noOfTask}}</label>
+                <label class="col-md-6"><strong>Completed:</strong> {{project.nofCompTask}}</label>
+              </div>
+              <div class="row">
+                <label class="col-md-6"><strong>Start Date:</strong> {{project.startDate}}</label>
+                <label class="col-md-6"><strong>End Date:</strong> {{project.endDate}}</label>
+              </div>
+            </div>
+            <div class="col-md-1 ml-1 column-bg-color">
+              <div class="row column-text-align">
+                <strong>Priority</strong>
+              </div>
+              <div class="row column-text-align">
+                {{project.priority}}
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="row column-text-align">
+                <button type="button" id="update_{{project.projectId}}" class="col-md-12" (click)="update(project)" value="Update">Update</button>
+              </div>
+              <br>
+              <div class="row column-text-align">
+                <button type="button" class="col-md-12" (click)="suspend(project)" value="Suspend">Suspend</button>
+              </div>
+            </div>
+          </div>
+        </li>
+      </div>
+      <div class="modal" id="userSearch" [ngStyle]="{'display':display}">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Manager Selection</h4>
+              <button type="button" class="close" (click)="closeUserModal()" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <p>Please select anyone of the employee below as Manager</p>
+                <div class="form-group">
+                  <input type="text" placeholder="Search User" class="col-md-9 form-control" id="user" name="user" [(ngModel)]="userName" style="background-color:#d3d3d3">
+                </div>
+                <div class="list-group">
+                  <li class="list-group-item" *ngFor="let user of users | userSearch:userName">
+                    <a href="#" (click)="selectedUser(user, $event)">{{user.firstName}} {{user.lastName}}</a>
+                  </li>
+                </div>
+              </form>
+            </div>
+            <div *ngIf="user.firstName">
+              <p class="text-center">
+                <strong>Selected User for Manager:</strong> {{user.firstName}} {{user.lastName}}</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" (click)="addUser()" data-dismiss="modal">Add</button>
+              <button type="button" class="btn btn-danger" (click)="closeUserModal()" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
